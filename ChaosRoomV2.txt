@@ -1,0 +1,214 @@
+.nocash
+.psx
+.mips
+
+ org 800ED870h; ROM 104BA8
+jmp 801066D8h; jump to the change section
+nop
+
+ org 801066D8h; ROM 121440 start code to change room format
+mov r4,[r5+8h]; finish whatever was happening before the jump
+nop
+mov r15,80090000h; set the address to be read (zoneID)
+movh r25,[r15+74A0h]
+nop
+mov r15,0Dh
+nop
+jne r25,r15,lskipUpdate; if this isn't the right room, move on
+nop
+mov r15,80190000h;setting the check tile address
+movh r25,[r15+65E0h]
+nop
+jnz r25,lskipUpdate; if the room was already changed, move on
+nop
+mov r25,0101h;change the tile because we're changing something
+mov [r15+65E0h],r25
+nop
+mov r15,80090000h; set Nice RNG lookup, last two digits
+movb r25,[r15+78BBh]
+nop
+mov r15,r25
+movp r25,rniceOutput
+nop
+mov [r25],r15
+mov r23,80190000h
+sub r15,80h;subtract half
+js r15,lopenBottom;check if this is in the latter half, if not, jump to open the bottom
+nop
+mov r15,032Ah;		changing tiles in range starting with 80195106
+movh [r23+5106h],r15
+mov r15,030Bh;		changing tiles in range starting with 80195106
+movh [r23+5108h],r15
+mov r15,02FEh;		changing tiles in range starting with 80195106
+movh [r23+510Ah],r15
+mov r15,0h;		changing tiles in range starting with 801951E4
+movh [r23+51E4h],r15
+mov r15,02C7h;		changing tiles in range starting with 801951E4
+movh [r23+51E6h],r15
+mov r15,02C8h;		changing tiles in range starting with 801951E4
+movh [r23+51E8h],r15
+mov r15,02C9h;		changing tiles in range starting with 801951E4
+movh [r23+51EAh],r15
+mov r15,02D4h;		changing tiles in range starting with 801952C6
+movh [r23+52C6h],r15
+mov r15,02E4h;		changing tiles in range starting with 801952C6
+movh [r23+52C8h],r15
+mov r15,02C9h;		changing tiles in range starting with 801952C6
+movh [r23+52CAh],r15
+mov r15,02E8h;		changing tiles in range starting with 801953A6
+movh [r23+53A6h],r15
+mov r15,02E9h;		changing tiles in range starting with 801953A6
+movh [r23+53A8h],r15
+mov r15,02A2h;		changing tiles in range starting with 801953A6
+movh [r23+53AAh],r15
+mov r15,0324h;		changing tiles in range starting with 80195486
+movh [r23+5486h],r15
+mov r15,032Bh;		changing tiles in range starting with 80195486
+movh [r23+5488h],r15
+mov r15,032Ch;		changing tiles in range starting with 80195486
+movh [r23+548Ah],r15
+mov r15,032Ch;		changing tiles in range starting with 80195486
+movh [r23+548Ch],r15
+jmp lsecondCheck
+nop
+lopenBottom:
+mov r15,034Ch;		changing tiles in range starting with 80195D54
+movh [r23+5D54h],r15
+mov r15,034Dh;		changing tiles in range starting with 80195D54
+movh [r23+5D56h],r15
+mov r15,034Bh;		changing tiles in range starting with 80195D54
+movh [r23+5D58h],r15
+mov r15,0293h;		changing tiles in range starting with 80195D54
+movh [r23+5D5Ah],r15
+mov r15,0294h;		changing tiles in range starting with 80195E36
+movh [r23+5E36h],r15
+mov r15,0300h;		changing tiles in range starting with 80195E36
+movh [r23+5E38h],r15
+mov r15,0295h;		changing tiles in range starting with 80195E36
+movh [r23+5E3Ah],r15
+mov r15,0h;		changing tiles in range starting with 80195E36
+movh [r23+5E3Ch],r15
+mov r15,0h;		changing tiles in range starting with 80195F18
+movh [r23+5F18h],r15
+movh [r23+5F1Ah],r15
+movh [r23+5F1Ch],r15
+movh [r23+5F1Eh],r15
+movh [r23+5FF8h],r15;	changing tiles in range starting with 80195FF8
+mov r15,02D1h;		changing tiles in range starting with 80195FF8
+movh [r23+5FFAh],r15
+mov r15,0322h;		changing tiles in range starting with 80195FF8
+movh [r23+5FFCh],r15
+mov r15,02D2h;		changing tiles in range starting with 80195FF8
+movh [r23+5FFEh],r15
+mov r15,02D3h;		changing tiles in range starting with 80195FF8
+movh [r23+6000h],r15
+mov r15,0h;		changing tiles in range starting with 801960D8
+movh [r23+60D8h],r15
+mov r15,02EBh;		changing tiles in range starting with 801960D8
+movh [r23+60DAh],r15
+mov r15,031Eh;		changing tiles in range starting with 801960D8
+movh [r23+60DCh],r15
+mov r15,0323h;		changing tiles in range starting with 801960D8
+movh [r23+60DEh],r15
+mov r15,034Ah;		changing tiles in range starting with 801960D8
+movh [r23+60E0h],r15
+lsecondCheck:
+movp r15,[rniceOutput]
+movp r25,[rniceOutput]
+nop
+sub r15,64; Check if the niceRNG is less than 64
+js r15,lskipUpdate
+nop
+sub r25,191; Check if the niceRNG is greater than 191
+jns r25,lskipUpdate
+nop
+mov r15,033Eh;		changing tiles in range starting with 80195BD6
+movh [r23+5BD6h],r15
+mov r15,0350h;		changing tiles in range starting with 80195BD6
+movh [r23+5BD8h],r15
+mov r15,0346h;		changing tiles in range starting with 80195BD6
+movh [r23+5BDAh],r15
+mov r15,0h;		changing tiles in range starting with 80195BD6
+movh [r23+5BDCh],r15
+movh [r23+5BDEh],r15
+movh [r23+5BE0h],r15
+mov r15,0340h;		changing tiles in range starting with 80195BD6
+movh [r23+5BE2h],r15
+mov r15,0341h;		changing tiles in range starting with 80195BD6
+movh [r23+5BE4h],r15
+mov r15,0326h;		changing tiles in range starting with 80195CB6
+movh [r23+5CB6h],r15
+mov r15,0h;		changing tiles in range starting with 80195CB6
+movh [r23+5CB8h],r15
+movh [r23+5CBAh],r15
+movh [r23+5CBCh],r15
+movh [r23+5CBEh],r15
+mov r15,0340h;		changing tiles in range starting with 80195CB6
+movh [r23+5CC0h],r15
+mov r15,0348h;		changing tiles in range starting with 80195CB6
+movh [r23+5CC2h],r15
+mov r15,0347h;		changing tiles in range starting with 80195CB6
+movh [r23+5CC4h],r15
+lskipUpdate:
+jmp 800A22B8h; 		Jump to check about Alchemy Lab
+nop
+nop
+
+ org 800A22B8h; ROM AE2A0 start code to change room format
+mov r15,80090000h; set the address to be read (zoneID)
+movh r25,[r15+74A0h]
+nop
+mov r15,0Ch
+nop
+jne r25,r15,lskipUpdateTwo; if this isn't the right room, move on
+nop
+movp r15,[rniceOutput];load RNG
+nop
+sub r15,128; Check if the niceRNG is greater than 128
+jns r15,lskipUpdateTwo
+nop
+mov r23,801A0000h
+nop
+mov r15,0282h;		changing tiles in range starting with 8019e6f4
+movh [r23-190Ch],r15
+mov r15,0283h;		changing tiles in range starting with 8019e6f6
+movh [r23-190Ah],r15
+mov r15,003Fh;		changing tiles in range starting with 8019e5ea
+movh [r23-1A16h],r15
+mov r15,0038h;		changing tiles in range starting with 8019e5ec
+movh [r23-1A14h],r15
+mov r15,0033h;		changing tiles in range starting with 8019e62a
+movh [r23-19D6h],r15
+mov r15,00A7h;		changing tiles in range starting with 8019e62c
+movh [r23-19D4h],r15
+mov r15,0011h;		changing tiles in range starting with 8019e66a
+movh [r23-1996h],r15
+mov r15,0012h;		changing tiles in range starting with 8019e66c
+movh [r23-1994h],r15
+mov r15,00D6h;		changing tiles in range starting with 8019e66e
+movh [r23-1992h],r15
+mov r15,00D7h;		changing tiles in range starting with 8019e670
+movh [r23-1990h],r15
+nop
+mov r23,80180000h
+nop
+mov r15,00A0h;		changing tiles in range starting with 801934f2
+movh [r23+34F2h],r15
+mov r15,0140h;		changing tiles in range starting with 801934f4
+movh [r23+34F4h],r15
+mov r15,001Bh;		changing tiles in range starting with 801934f6
+movh [r23+34F6h],r15
+mov r15,00A0h;		changing tiles in range starting with 80192bae
+movh [r23+2BAEh],r15
+mov r15,0140h;		changing tiles in range starting with 80192bb0
+movh [r23+2BB0h],r15
+mov r15,001Bh;		changing tiles in range starting with 80192bb2
+movh [r23+2BB2h],r15
+nop
+lskipUpdateTwo:
+jmp 800ED874h
+nop
+rniceOutput:
+nop
+
+end

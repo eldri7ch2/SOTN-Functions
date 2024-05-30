@@ -1,0 +1,71 @@
+.nocash
+.psx
+.mips
+
+ org 800F3134h; 10B17C
+jmp 80106670h; jump to the Save Room resolution
+nop
+
+ org 80106670h; 1213D8 start code to resolve Save Room issues
+call 8010A5BCh
+nop
+mov r8,80130000h; set the address to be read
+movh r15,[r8+7598h]; read the address and document it as 00 or 01
+nop
+jz r15,lNotSave; if it is not a save room, then skip the next bit
+nop
+mov r8,80090000h; set the address to be read
+movh r15,[r8+73F0h]; read the player x pos
+nop
+movp r8,rPlayerX; write the updated value to PlayerX
+nop
+mov [r8],r15
+nop
+mov r8,80070000h; set the address to be read
+movh r15,[r8+3404h]; read the player step
+nop
+mov r8,01h
+je r15,r8,lStepNotOne
+lZeroSave:
+nop
+movp r8,rSaveCount; reset to 0 for next instance
+nop
+mov [r8],0
+lExitFunction:
+jmp 800F313Ch; return to the call location then set the variable lines.
+nop
+lStepNotOne:
+movp r15,[rPlayerX]; Load both values from PlayerX for the X pos comparison
+movp r8,[rPlayerX]
+nop
+sub r15,7Eh; Check if the x pos is less than 7E
+js r15,lSkipIncrement
+nop
+sub r8,83h; Check if the x pos is greater than 83
+jns r8,lSkipIncrement
+nop
+movp r8,[rSaveCount]; update the SaveCount (Counts frames we've been stuck)
+nop
+add r8,01h
+movp r15,rSaveCount
+nop
+mov [r15],r8
+nop
+lSkipIncrement:
+movp r8,[rSaveCount]; check is SaveCount is > 2
+nop
+sub r8,02h
+js r8,lExitFunction; Skip to the end if it isn't
+nop
+mov r8,80070000h; Fix our position if the correction applies 
+mov r15,80h
+movh [r8+33DAh],r15
+lNotSave:
+jmp lZeroSave; return to the call location then set the variable lines.
+nop
+rSaveCount:
+nop
+rPlayerX:
+nop
+
+end; 12f694 = 03, 12f8a4 = 02, 12f7f4 = 02

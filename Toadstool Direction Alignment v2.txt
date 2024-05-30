@@ -1,0 +1,85 @@
+.nocash
+.psx
+.mips
+
+;adding code to 80106670 that will execute when being launched by a toadstool that uses the direction Alucard was facing when he collected it.
+;editing all four addresses for grounded and airborn use is required to make the functions work.
+
+ org 800E3D8Ch; F9904 no more hitbox function
+
+ org 80113FF0h
+jmp ReadThrow; 130D68 change the jump address when setting the gewt hit direction
+nop
+
+ org 8017B5A0h; 3AF8918 -grounded right- start at the exact point where getting hit by the toadstool would set food state to 4
+call 80106670h; jump to the new function reading alucard's facing direction
+nop
+
+ org 8017E5A0h; 3CD2DF8 -grounded left- start at the exact point where getting hit by the toadstool would set food state to 4
+call 80106670h; jump to the new function reading alucard's facing direction
+nop
+
+ org 8017B2F4h; 3AF866C -airborn right- start at the exact point where getting hit by the toadstool would set food state to 4
+call MidAirCatch; jump to the new function reading alucard's facing direction
+nop
+
+ org 8017E2F4h; 3CD2B4C -airborn left- start at the exact point where getting hit by the toadstool would set food state to 4
+call MidAirCatch; jump to the new function reading alucard's facing direction
+nop
+
+align 16
+
+ org 80106670h; 1213D8 start setting a variable to read / document alucard's direction
+movh [r16+2Ch],r2; keep doing what 8017B5A0 used to do
+mov r2,14h
+nop
+mov r8,80070000h; set the address to be read
+movh r15,[r8+33ECh]; read the address and document it as 00 or 01
+nop
+add r15,01h; add 1 to make it more readable later
+nop
+movp r8,ThrowDirection; write the updated value to throwdirection
+nop
+mov [r8],r15
+ret; jump back into the code executed when hit by the toadstool
+nop
+MidAirCatch:
+movh [r16+2Ch],r2;finish up the airborn functions replaced
+mov r2,4000h
+nop
+mov r8,80070000h; set the address to be read
+movh r15,[r8+33ECh]; read the address and document it as 00 or 01
+nop
+add r15,01h; add 1 to make it more readable later
+nop
+movp r8,ThrowDirection; write the updated value to throwdirection
+nop
+mov [r8],r15
+ret; jump back into the code executed when hit by the toadstool
+nop
+ThrowDirection:
+nop
+ReadThrow:
+shl r2,10h; Finish what was happening at 80113ff0
+sar r2,10h
+movp r15,[ThrowDirection] ; load from ThrowDirection address and put it into r15
+movp r14,8007340Ah ; setup pointer to the direction of knockback
+jz r15,NoChange
+nop
+sub r15,01h; do more stuff for left or right
+nop
+xor r15,1h
+nop
+movh [r14],r15
+nop
+movp r14,ThrowDirection; reset to 0 for next instance
+nop
+mov [r14],0
+nop
+jmp 80114054h
+nop
+NoChange:
+jmp 80113FF8h
+nop
+
+end

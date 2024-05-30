@@ -1,0 +1,48 @@
+.nocash
+.psx
+.mips
+
+ org 800FDFACh; ROM 1178E4
+jmp 800A221Ch; jump to the change section
+nop
+
+ org 800A221Ch; ROM AE204 start code to change room format
+add r3,r2,r3
+mov [r16],r3
+nop
+mov r12,80090000h; set Nice RNG storage STR
+movb r23,[r12+78B8h]
+nop
+mov r12,r23
+nop
+mov r12,80090000h
+mov [r12+7BB8h],r23
+nop
+mov r12,80090000h; set Nice RNG storage CON
+movb r23,[r12+78B9h]
+nop
+mov r12,r23
+nop
+mov r12,80090000h
+mov [r12+7BBCh],r23
+nop
+mov r12,80090000h; set Nice RNG storage INT
+movb r23,[r12+78BAh]
+nop
+mov r12,r23
+nop
+mov r12,80090000h
+mov [r12+7BC0h],r23
+nop
+mov r12,80090000h; set Nice RNG storage LCK
+movb r23,[r12+78BBh]
+nop
+mov r12,r23
+nop
+mov r12,80090000h
+mov [r12+7BC4h],r23
+nop
+jmp 800FDFB4h
+nop
+
+end

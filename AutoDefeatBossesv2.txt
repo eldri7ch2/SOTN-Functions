@@ -1,0 +1,28 @@
+.nocash
+.psx
+.mips
+
+ org 800F3134h; not actual address
+call 800CDCA0h; call boss defeat
+nop
+
+ org 800CDCA0h; e03d8 defeat all bosses
+mov r7,01h
+mov r22,80040000h
+mov [r22-35D8h],r7
+nop
+movb [r22-417Eh],r7
+nop
+mov r7,02h
+movp r21,8003CA2Ch
+movp r22,8003CA90h
+nop
+loop:
+mov [r21],r7
+add r21,4h
+jne r21,r22,loop
+nop
+ret
+nop
+
+end; 12f694 = 03, 12f8a4 = 02, 12f7f4 = 02
